@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE softpkg PUBLIC "-//JTRS//DTD SCA V2.2.2 SPD//EN" "softpkg.dtd">
+<softpkg id="DCE:5c6bd57f-c08c-4e9a-8165-d57af62e8724" name="myFMDemodulator" type="sca_compliant">
+  <title></title>
+  <author>
+    <name>null</name>
+  </author>
+  <propertyfile type="PRF">
+    <localfile name="myFMDemodulator.prf.xml"/>
+  </propertyfile>
+  <descriptor>
+    <localfile name="myFMDemodulator.scd.xml"/>
+  </descriptor>
+  <implementation id="cpp">
+    <description>The implementation contains descriptive information about the template for a software component.</description>
+    <code type="Executable">
+      <localfile name="cpp/myFMDemodulator"/>
+      <entrypoint>cpp/myFMDemodulator</entrypoint>
+    </code>
+    <compiler name="/usr/bin/gcc" version="4.1.2"/>
+    <programminglanguage name="C++"/>
+    <humanlanguage name="EN"/>
+    <os name="Linux"/>
+    <processor name="x86"/>
+    <processor name="x86_64"/>
+    <dependency type="allocation">
+      <softpkgref>
+        <localfile name="/deps/liquid_dsp_v1/liquid_dsp_v1.spd.xml"/>
+      </softpkgref>
+    </dependency>
+  </implementation>
+</softpkg>
