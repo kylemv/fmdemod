@@ -56,7 +56,6 @@ void myFMDemodulator_i::modFactorChanged(const float *oldVal, const float *newVa
 }
 void myFMDemodulator_i::bandwidthChanged(const float *oldVal, const float *newVal)
 {
-	//The lock causes issues when used in the service function.  I need to make sure it's being released properly	
 	boost::mutex::scoped_lock lock(propertyLock_);
 
 	//Validate bandwidth value
