@@ -20,6 +20,7 @@ myFMDemodulator_i::myFMDemodulator_i(const char *uuid, const char *label) :
 	addPropertyChangeListener("fc", this, &myFMDemodulator_i::fcChanged);
 	m_demod = NULL;
 	m_type = LIQUID_FREQMODEM_DELAYCONJ;
+	m_factor = modFactor;
 	m_delta = 0.0;		//input xdelta
 	m_size = 0;			//input Packet size
 	m_lastSize = 0;		//previous Packet Size
@@ -35,10 +36,13 @@ myFMDemodulator_i::~myFMDemodulator_i()
 	}
 }
 /************************* Property Change Listeners *******************************************/
+/**
+ * Property Change Listener for the Modulation Index.
+ */
 void myFMDemodulator_i::modFactorChanged(const float *oldVal, const float *newVal)
 {
 	boost::mutex::scoped_lock lock(propertyLock_);
-
+	//propertyLock_.lock();
 	//Validate proper modulation factor
 	if(m_delta != 0){
 		if(*newVal <= 0 || *newVal > 2*M_PI){
@@ -53,10 +57,16 @@ void myFMDemodulator_i::modFactorChanged(const float *oldVal, const float *newVa
 		bandwidth = modFactor / m_delta;
 		createDemod();
 	}
+	//propertyLock_.unlock();
+	//boost::mutex::scoped_lock unlock(propertyLock_);
 }
+//I'm not sure if storing the bandwith has any use with the liquid dsp library since
+//it doesn't new it in demodulation.  The FMDemodulator used as an example seems
+//to use the bandwidth to recalculate the Modulation index. If it's assumed the user
+//will know the modulation index, this is unnecessary.  The same can be said of the sample rate.
 void myFMDemodulator_i::bandwidthChanged(const float *oldVal, const float *newVal)
 {
-	//The lock causes issues when used in the service function.  I need to make sure it's being released properly	
+	/*
 	boost::mutex::scoped_lock lock(propertyLock_);
 
 	//Validate bandwidth value
@@ -77,11 +87,17 @@ void myFMDemodulator_i::bandwidthChanged(const float *oldVal, const float *newVa
 
 		createDemod();
 	}
+
+	boost::mutex::scoped_lock unlock(propertyLock_);*/
 }
+/**
+ * Property changed listener for the type of modulation.  Liquid defines two methods of demodulation,
+ * Delay Conjugate and Phase Locked Loop.
+ */
 void myFMDemodulator_i::modTypeChanged(const std::string *oldVal, const std::string *newVal)
 {
 	boost::mutex::scoped_lock lock(propertyLock_);
-
+	//propertyLock_.lock();
 	if(*newVal == "LIQUID_FREQMODEM_DELAYCONJ"){
 		m_type = LIQUID_FREQMODEM_DELAYCONJ;
 	}else if(*newVal == "LIQUID_FREQMODEM_PLL"){
@@ -95,11 +111,16 @@ void myFMDemodulator_i::modTypeChanged(const std::string *oldVal, const std::str
 	if (m_delta != 0){
 		createDemod();
 	}
+	//propertyLock_.unlock();
+	//boost::mutex::scoped_lock unlock(propertyLock_);
 }
+/**
+ * Property Change Listener for the carrier frequency.
+ */
 void myFMDemodulator_i::fcChanged(const float *oldVal, const float *newVal)
 {
 	boost::mutex::scoped_lock lock(propertyLock_);
-
+	//propertyLock_.lock();
 	if(*newVal <= -0.5 || *newVal >= 0.5){
 		std::cerr << "Invalid 'Carrier Frequency, fc'.  fc must be greater than -0.5 and less than 0.5"<<std::endl;
 		std::cerr << "-- Keeping 'fc' as"<<*oldVal<<std::endl;
@@ -110,6 +131,7 @@ void myFMDemodulator_i::fcChanged(const float *oldVal, const float *newVal)
 	}
 	if(m_delta != 0)
 		createDemod();
+	//propertyLock_.unlock();
 }
 /***********************************************************************************************
 
@@ -257,7 +279,11 @@ int myFMDemodulator_i::serviceFunction()
     std::vector< std::complex<float> >* preDemod = (std::vector<std::complex<float> >*) &(input->dataBuffer);
     m_size = preDemod->size();
     {
-    	//boost::mutex::scoped_lock lock(propertyLock_);
+    	//There's an issue with the way this lock is implemented.  It causes the
+    	//function to hang and do nothing.
+
+    	boost::mutex::scoped_lock lock(propertyLock_);
+    	//propertyLock_.lock();
     	//remake demodulation object with new properties
     	if(input->sriChanged){
     		m_delta = input->SRI.xdelta;
@@ -279,6 +305,8 @@ int myFMDemodulator_i::serviceFunction()
     	for(unsigned int i = 0; i < m_size; i++){
     		freqmodem_demodulate(m_demod, *((liquid_float_complex*) &preDemod->at(i)), &m_output[i]);
     	}
+    	//propertyLock_.unlock();
+    	//boost::mutex::scoped_lock unlock(propertyLock_);
     }
 
     dataFloat_out->pushPacket(m_output, input->T,input->EOS,input->streamID);
@@ -289,10 +317,13 @@ int myFMDemodulator_i::serviceFunction()
 void myFMDemodulator_i::createDemod(void)
 {
 	//boost::mutex::scoped_lock lock(propertyLock_);
+	//propertyLock_.lock();
 	if(m_demod)
 		freqmodem_destroy(m_demod);
 	std::cout<<"Modulation Factor is "<<modFactor<<std::endl;
-	m_demod = freqmodem_create(modFactor,fc,m_type);
+	m_demod = freqmodem_create(m_factor,fc,m_type);
+	//propertyLock_.unlock();
+	//boost::mutex::scoped_lock unlock(propertyLock_);
 }
 void myFMDemodulator_i::sizeVectors(void)
 {

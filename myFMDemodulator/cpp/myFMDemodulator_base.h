@@ -25,7 +25,7 @@ class myFMDemodulator_base : public Resource_impl, protected ThreadedComponent
         // Member variables exposed as properties
         float modFactor;
         std::string modType;
-        std::string bandwidth;
+        float bandwidth;
         float fc;
         float sample_rate;
 

@@ -25,6 +25,7 @@ class myFMDemodulator_i : public myFMDemodulator_base
         void sizeVectors(void);
         //Local Variables and Properties
         freqmodem m_demod;
+        float m_factor;
         liquid_freqmodem_type m_type;
         std::vector<float> m_output;
 

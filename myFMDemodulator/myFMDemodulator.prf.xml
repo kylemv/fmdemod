@@ -11,7 +11,7 @@
     <kind kindtype="configure"/>
     <action type="external"/>
   </simple>
-  <simple id="bandwidth" mode="readwrite" type="string">
+  <simple id="bandwidth" mode="readwrite" type="float">
     <kind kindtype="configure"/>
     <action type="external"/>
   </simple>
