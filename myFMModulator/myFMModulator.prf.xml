@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties PUBLIC "-//JTRS//DTD SCA V2.2.2 PRF//EN" "properties.dtd">
+<properties>
+  <simple id="modFactor" mode="readwrite" type="float">
+    <description>Modulation factor used in modulation</description>
+    <value>.1</value>
+    <kind kindtype="configure"/>
+    <action type="external"/>
+  </simple>
+  <simple id="modType" mode="readwrite" type="string">
+    <description>One of two demodulation types defined in liquid.  Either LIQUID_FREQMODEM_DELAYCONJ or LIQUID_FREQMODEM_PLL</description>
+    <value>LIQUID_FREQMODEM_DELAYCONJ</value>
+    <kind kindtype="configure"/>
+    <action type="external"/>
+  </simple>
+  <simple id="fc" mode="readwrite" type="float">
+    <description>Carrier frequency </description>
+    <value>0</value>
+    <kind kindtype="configure"/>
+    <action type="external"/>
+  </simple>
+</properties>
