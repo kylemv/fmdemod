@@ -11,40 +11,40 @@ To use these components
 
 2) Install liquid-dsp
 
--Clone the repository at lmcadoo2/liquid-dsp
+	-Clone the repository at lmcadoo2/liquid-dsp
 
-  git clone git://github.com/lmcadoo2/liquid-dsp.git
+	  git clone git://github.com/lmcadoo2/liquid-dsp.git
 
--Enter the directory
+	-Enter the directory
 
--Run the following
-
-  ./bootstrap.sh
-  ./configure
-  make
-  sudo make install
+	-Run the following
+	
+		./bootstrap.sh
+	 	./configure
+	 	make
+  	sudo make install
 
 3) Get the component code
 
--Clone this repository
+	-Clone this repository
 
-  git clone git://github.com/kylemv/fmdemod.git
+	 git clone git://github.com/kylemv/fmdemod.git
 
--Import the project into eclipse
+	-Import the project into eclipse
 
-  -File->Import->C/C++->Existing Code as Makefile Project
+  	-File->Import->C/C++->Existing Code as Makefile Project
 
-  -Browse to the folder in the 'Existing Code Location' box
+  	-Browse to the folder in the 'Existing Code Location' box
 
-  -Finish
+  	-Finish
 
--Build the project
+	-Build the project
 
-  -Right click the project folder and select 'Build Project'
+  	-Right click the project folder and select 'Build Project'
 
--Export to the 'Target SDR'
+	-Export to the 'Target SDR'
 
-  -Drag the project folder to 'Target SDR' in the SCA Explorer view
+  	-Drag the project folder to 'Target SDR' in the SCA Explorer view
 
 4) The component is now ready for use in Redhawk. For more information on components in Redhawk, see chapters 3 and 4 in the documentation located here:
 
