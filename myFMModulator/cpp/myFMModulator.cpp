@@ -247,7 +247,7 @@ int myFMModulator_i::serviceFunction()
 
 			//push new SRI data
 			m_sriOut = input->SRI;
-			m_sriOut.mode = 0;
+			m_sriOut.mode = 1;
 			dataFloat_out->pushSRI(m_sriOut);
 			//std::cout<<"Modified SRI"<<std::endl;
 		}
